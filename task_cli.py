@@ -13,15 +13,13 @@ $$$$$$$$/______    _______ $$ |   __       $$$$$$$$/______   ______    _______ $
 
 def display_main_menu():
     print(title)
-    print("1. Add a task")
-    print("2. View all tasks")
-    print("3. Mark a task as completed")
-    print("4. Delete a task")
-    print("5. Exit")
+    print("add")
+    print("update")
+    print("delete")
+    print("mark-in-progress")
+    print("mark-done")
+    print("list")
+    print("list by status")
 
-def add_task():
-    print("Add a task")
-    task = input("Enter a task: ")
-    print(f"Task '{task}' added successfully")
 
 display_main_menu()
