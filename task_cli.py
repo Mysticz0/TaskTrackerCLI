@@ -78,8 +78,25 @@ def delete_task(id):
     
     print(f"No task with ID = {id}")
 
-def mark_task_in_progress(task):
-    print("Task marked as in progress")
+def mark_task_in_progress(id):
+    
+    with open("tasks.json", "r") as f:
+        data = json.load(f)
+    
+    temp = data["tasks"]
+    if temp == []:
+        print(f"No task with ID = {id}")
+        return
+
+    for t in temp:
+        if t["id"] == id:
+            t["status"] = "in-progress"
+            with open("tasks.json", "w") as f:
+                json.dump(data, f, indent=2)
+            print(f"Task (ID = {id}) marked as 'in progress'")
+            return
+    
+    print(f"No task with ID = {id}")
 
 def mark_task_done(task):
     print("Task marked as done")
@@ -123,10 +140,10 @@ def main():
         delete_task(args.id)
 
     elif args.command == "mark-in-progress":
-        mark_task_in_progress(args.task)
+        mark_task_in_progress(args.id)
 
     elif args.command == "mark-done":
-        mark_task_done(args.task)
+        mark_task_done(args.id)
 
     elif args.command == "list":
         if args.status is None:
