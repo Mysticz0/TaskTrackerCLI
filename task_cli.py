@@ -35,8 +35,28 @@ def add_task(task):
 
     print("Task added successfully")
 
-def update_task(task):
-    print("Task updated successfully")
+def update_task(id, task):
+    
+    new_description = task
+
+    with open("tasks.json", "r") as f:
+        data = json.load(f)
+    
+    temp = data["tasks"]
+    if temp == []:
+        print(f"No task with ID = {id}")
+        return
+    
+    for t in temp:
+        if t["id"] == id:
+            t["description"] = new_description
+            with open("tasks.json", "w") as f:
+                json.dump(data, f, indent=2)
+            print("Task updated successfully")
+            return
+    
+    print(f"No task with ID = {id}")
+
 
 def delete_task(task):
     print("Task deleted successfully")
@@ -55,50 +75,47 @@ def list_tasks_by_status(status):
 
 def main():
     init()
+
     parser = argparse.ArgumentParser(description="Task Tracker CLI")
-    parser.add_argument("command", choices=["add", "update", "delete", "mark-in-progress", "mark-done", "list", "list-by-status"])
-    parser.add_argument("task", nargs="?", help="Task description")
-    parser.add_argument("--status", help="Task status")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    add_p = subparsers.add_parser("add")
+    add_p.add_argument("task")
+
+    update_p = subparsers.add_parser("update")
+    update_p.add_argument("id", type=int)
+    update_p.add_argument("task")
+
+    delete_p = subparsers.add_parser("delete")
+    delete_p.add_argument("id", type=int)
+
+    subparsers.add_parser("mark-in-progress").add_argument("id", type=int)
+    subparsers.add_parser("mark-done").add_argument("id", type=int)
+
+    list_p = subparsers.add_parser("list")
+    list_p.add_argument("status", choices=["todo", "in-progress", "complete"], nargs='?')
+    
     args = parser.parse_args()
 
     if args.command == "add":
-        if not args.task:
-            print("Error: Task description is required")
-            return
         add_task(args.task)
 
     elif args.command == "update":
-        if not args.task:
-            print("Error: Task description is required")
-            return
-        update_task(args.task)
+        update_task(args.id, args.task)
 
     elif args.command == "delete":
-        if not args.task:
-            print("Error: Task description is required")
-            return
         delete_task(args.task)
 
     elif args.command == "mark-in-progress":
-        if not args.task:
-            print("Error: Task description is required")
-            return
         mark_task_in_progress(args.task)
 
     elif args.command == "mark-done":
-        if not args.task:
-            print("Error: Task description is required")
-            return
         mark_task_done(args.task)
 
     elif args.command == "list":
-        list_tasks()
-
-    elif args.command == "list-by-status":
-        if not args.status:
-            print("Error: Status is required")
-            return
-        list_tasks_by_status(args.status)
+        if args.status is None:
+            list_tasks()
+        else:
+            list_tasks_by_status(args.status)
 
     else:
         print("Error: Invalid command")
