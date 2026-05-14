@@ -103,7 +103,7 @@ def mark_task(id, new_status):
     print(f"No task with ID = {id}")
 
 def list_tasks():
-    
+
     with open("tasks.json", "r") as f:
         data = json.load(f)
 
@@ -116,7 +116,18 @@ def list_tasks():
         print(f"Updated At: {entry["updated_at"]}\n")
 
 def list_tasks_by_status(status):
-    print(f"Listing all tasks by {status}")
+    
+    with open("tasks.json", "r") as f:
+        data = json.load(f)
+
+    print("")
+    for entry in data["tasks"]:
+        if entry["status"] == status:
+            print(f"ID: {entry["id"]}")
+            print(f"Description: {entry["description"]}")
+            print(f"Status: {entry["status"]}")
+            print(f"Created At: {entry["created_at"]}")
+            print(f"Updated At: {entry["updated_at"]}\n")
 
 def main():
     init()
@@ -137,7 +148,7 @@ def main():
     subparsers.add_parser("mark-done").add_argument("id", type=int)
 
     list_p = subparsers.add_parser("list")
-    list_p.add_argument("status", choices=["todo", "in-progress", "complete"], nargs='?')
+    list_p.add_argument("status", choices=["todo", "in-progress", "done"], nargs='?')
     
     args = parser.parse_args()
 
