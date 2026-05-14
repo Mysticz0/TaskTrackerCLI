@@ -1,6 +1,38 @@
 import argparse
+import json
+import datetime as dt
+from pathlib import Path
 
+START_ID = 1
+
+def init():
+    file_path = Path("tasks.json")
+    if not file_path.is_file():
+        f = open("tasks.json", "w")
+        json.dump({"tasks" : []}, f, indent=2)
+        f.close()
+        
 def add_task(task):
+
+    description = task
+    status = "todo"
+    timestamp = str(dt.datetime.now(dt.timezone.utc))
+
+    with open("tasks.json", "r") as f:
+        data = json.load(f)
+
+    temp = data["tasks"]
+    if temp == []:
+        id = START_ID
+    else:
+        id = temp[-1]["id"] + 1
+    
+    new_task = {"id" : id, "description" : description, "status" : status, "created_at" : timestamp, "updated_at" : timestamp}
+    temp.append(new_task)
+
+    with open("tasks.json", "w") as f:
+        json.dump(data, f, indent=2)
+
     print("Task added successfully")
 
 def update_task(task):
@@ -22,6 +54,7 @@ def list_tasks_by_status(status):
     print(f"Listing all tasks by {status}")
 
 def main():
+    init()
     parser = argparse.ArgumentParser(description="Task Tracker CLI")
     parser.add_argument("command", choices=["add", "update", "delete", "mark-in-progress", "mark-done", "list", "list-by-status"])
     parser.add_argument("task", nargs="?", help="Task description")
