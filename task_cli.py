@@ -27,7 +27,7 @@ def add_task(task):
     else:
         id = temp[-1]["id"] + 1
     
-    new_task = {"id" : id, "description" : description, "status" : status, "created_at" : timestamp, "updated_at" : timestamp}
+    new_task = {"id" : id, "description" : description, "status" : status, "createdAt" : timestamp, "updatedAt" : timestamp}
     temp.append(new_task)
 
     with open("tasks.json", "w") as f:
@@ -51,7 +51,7 @@ def update_task(id, task):
     for t in temp:
         if t["id"] == id:
             t["description"] = new_description
-            t["updated_at"] = timestamp
+            t["updatedAt"] = timestamp
             with open("tasks.json", "w") as f:
                 json.dump(data, f, indent=2)
             print("Task updated successfully")
@@ -94,7 +94,7 @@ def mark_task(id, new_status):
     for t in temp:
         if t["id"] == id:
             t["status"] = new_status
-            t["updated_at"] = timestamp
+            t["updatedAt"] = timestamp
             with open("tasks.json", "w") as f:
                 json.dump(data, f, indent=2)
             print(f"Task (ID = {id}) marked as '{new_status}'")
@@ -112,8 +112,8 @@ def list_tasks():
         print(f"ID: {entry["id"]}")
         print(f"Description: {entry["description"]}")
         print(f"Status: {entry["status"]}")
-        print(f"Created At: {entry["created_at"]}")
-        print(f"Updated At: {entry["updated_at"]}\n")
+        print(f"Created At: {entry["createdAt"]}")
+        print(f"Updated At: {entry["updatedAt"]}\n")
 
 def list_tasks_by_status(status):
     
@@ -126,8 +126,8 @@ def list_tasks_by_status(status):
             print(f"ID: {entry["id"]}")
             print(f"Description: {entry["description"]}")
             print(f"Status: {entry["status"]}")
-            print(f"Created At: {entry["created_at"]}")
-            print(f"Updated At: {entry["updated_at"]}\n")
+            print(f"Created At: {entry["createdAt"]}")
+            print(f"Updated At: {entry["updatedAt"]}\n")
 
 def main():
     init()
