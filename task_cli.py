@@ -103,7 +103,17 @@ def mark_task(id, new_status):
     print(f"No task with ID = {id}")
 
 def list_tasks():
-    print("Listing all tasks")
+    
+    with open("tasks.json", "r") as f:
+        data = json.load(f)
+
+    print("")
+    for entry in data["tasks"]:
+        print(f"ID: {entry["id"]}")
+        print(f"Description: {entry["description"]}")
+        print(f"Status: {entry["status"]}")
+        print(f"Created At: {entry["created_at"]}")
+        print(f"Updated At: {entry["updated_at"]}\n")
 
 def list_tasks_by_status(status):
     print(f"Listing all tasks by {status}")
