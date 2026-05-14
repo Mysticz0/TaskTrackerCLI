@@ -38,6 +38,7 @@ def add_task(task):
 def update_task(id, task):
     
     new_description = task
+    timestamp = str(dt.datetime.now(dt.timezone.utc))
 
     with open("tasks.json", "r") as f:
         data = json.load(f)
@@ -50,6 +51,7 @@ def update_task(id, task):
     for t in temp:
         if t["id"] == id:
             t["description"] = new_description
+            t["updated_at"] = timestamp
             with open("tasks.json", "w") as f:
                 json.dump(data, f, indent=2)
             print("Task updated successfully")
@@ -78,8 +80,9 @@ def delete_task(id):
     
     print(f"No task with ID = {id}")
 
-def mark_task_in_progress(id):
+def mark_task(id, new_status):
     
+    timestamp = str(dt.datetime.now(dt.timezone.utc))
     with open("tasks.json", "r") as f:
         data = json.load(f)
     
@@ -90,16 +93,14 @@ def mark_task_in_progress(id):
 
     for t in temp:
         if t["id"] == id:
-            t["status"] = "in-progress"
+            t["status"] = new_status
+            t["updated_at"] = timestamp
             with open("tasks.json", "w") as f:
                 json.dump(data, f, indent=2)
-            print(f"Task (ID = {id}) marked as 'in progress'")
+            print(f"Task (ID = {id}) marked as '{new_status}'")
             return
     
     print(f"No task with ID = {id}")
-
-def mark_task_done(task):
-    print("Task marked as done")
 
 def list_tasks():
     print("Listing all tasks")
@@ -140,10 +141,10 @@ def main():
         delete_task(args.id)
 
     elif args.command == "mark-in-progress":
-        mark_task_in_progress(args.id)
+        mark_task(args.id, "in-progress")
 
     elif args.command == "mark-done":
-        mark_task_done(args.id)
+        mark_task(args.id, "done")
 
     elif args.command == "list":
         if args.status is None:
